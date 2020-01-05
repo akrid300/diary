@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Diary</string>
+    <string name="title_home">Home</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_holiday">Holidays</string>
+    <string name="title_activity_event">EventActivity</string>
+    <string name="add_event">Add event</string>
+    <string name="no_events">THERE ARE NO EVENTS ADDED</string>
+    <string name="no_holidays">THERE ARE NO HOLIDAYS ADDED</string>
+    <string name="title">Title</string>
+    <string name="title_placeholder">Please add event name</string>
+    <string name="description">Description</string>
+    <string name="description_placeholder">Please add a brief description for the event</string>
+    <string name="type">Type</string>
+    <string name="work">Work</string>
+    <string name="personal">Personal</string>
+    <string name="date">Date</string>
+    <string name="click_add_date">Click to add date</string>
+    <string name="done">Done</string>
+</resources>

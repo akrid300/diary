@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "title": "New Years Eve",
+        "date": "01.01",
+        "image": "https://assets.simpleviewinc.com/simpleview/image/fetch/c_limit,q_75,w_1200/https://assets.simpleviewinc.com/simpleview/image/upload/crm/daytonabeach/New-Years-Eve0_f5f19cc4-bff1-1500-863a6b1ac29af142.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Easter",
+        "date": "28.04",
+        "image": "https://www.almanac.com/sites/default/files/styles/primary_image_in_article/public/image_nodes/easter-eggs-text4.png?itok=IbpHdfhC"
+    },
+    {
+        "id": 3,
+        "title": "Labour Day",
+        "date": "01.05",
+        "image": "https://cdn.cdnparenting.com/articles/2019/04/30181147/1062426068-H.jpg"
+    },
+    {
+        "id": 4,
+        "title": "Children's Day",
+        "date": "01.06",
+        "image": "https://image.freepik.com/free-vector/flat-children-s-day-kids-with-games-candies_23-2148324112.jpg"
+    },
+    {
+        "id": 5,
+        "title": "Halloween",
+        "date": "31.10",
+        "image": "https://static.vecteezy.com/system/resources/previews/000/662/593/non_2x/vector-happy-halloween-with-dark-castle.jpg"
+    },
+    {
+        "id": 6,
+        "title": "Great Union Day",
+        "date": "01.12",
+        "image": "https://dayfinders.com/wp-content/uploads/2019/11/Romania-National-Day.png"
+    },
+    {
+        "id": 7,
+        "title": "Christmas",
+        "date": "25.12",
+        "image": "https://www.icsaigon.com/sites/icsaigon/files/styles/gallery_main/public/2019-11/intercontinental-saigon-christmas-day-celebration-gallery.png?itok=3bD0cwvK"
+    }
+]
