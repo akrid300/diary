@@ -106,6 +106,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         if (isStringNullOrEmpty(title)) {
             Toast.makeText(this, "Unable to save event. Please add title.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         event = new Event();

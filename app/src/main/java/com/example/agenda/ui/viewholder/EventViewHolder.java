@@ -1,5 +1,6 @@
 package com.example.agenda.ui.viewholder;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.agenda.R;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
 import com.example.agenda.ui.model.Event;
+import com.example.agenda.ui.utils.ContextMenu;
+import com.example.agenda.ui.utils.ContextMenuManager;
 import com.example.agenda.ui.utils.Utils;
 
 import java.util.Calendar;
@@ -21,7 +24,7 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    public void bind(int position, Event event, RecyclerViewClickListener listener) {
+    public void bind(final Context context, final int position, Event event, final RecyclerViewClickListener listener, final ContextMenu.OnContextMenuItemClickListener contextMenuListener) {
         ImageView menuButton = itemView.findViewById(R.id.menu_button);
         TextView eventTitle = itemView.findViewById(R.id.titleTextView);
         TextView eventDate = itemView.findViewById(R.id.dateTextView);
@@ -81,5 +84,13 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
         else {
             description.setVisibility(View.GONE);
         }
+
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ContextMenuManager.getInstance(context).showContextMenuFromView(view, position, contextMenuListener, true);
+            }
+        });
     }
 }

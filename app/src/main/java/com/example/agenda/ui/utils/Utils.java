@@ -1,5 +1,11 @@
 package com.example.agenda.ui.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Point;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.agenda.R;
@@ -55,5 +61,27 @@ public class Utils {
         return cal;
     }
 
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @return A float value to represent px equivalent to dp depending on device density
+     */
+    public static int dpToPx(float dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
+    }
 
+    private static int screenHeight = 0;
+    public static int getScreenHeight(Context c) {
+        if (screenHeight == 0) {
+            WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
+            if (wm != null) {
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                screenHeight = size.y;
+            }
+        }
+        return screenHeight;
+    }
 }

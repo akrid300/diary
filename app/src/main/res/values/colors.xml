@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="lightGrey">#ececec</color>
     <color name="white">#fff</color>
+    <color name="button_context_menu_normal">#ffffff</color>
+    <color name="button_context_menu_pressed">#40000000</color>
 </resources>

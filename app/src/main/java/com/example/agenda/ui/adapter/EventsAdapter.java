@@ -12,15 +12,19 @@ import com.example.agenda.R;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
 import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Annotations;
+import com.example.agenda.ui.utils.ContextMenu;
+import com.example.agenda.ui.utils.ContextMenuManager;
 import com.example.agenda.ui.viewholder.EventViewHolder;
 
 import java.util.ArrayList;
 
-public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ContextMenu.OnContextMenuItemClickListener {
 
     private ArrayList<Event> items = new ArrayList<>();
     private Context context;
     private RecyclerViewClickListener listener;
+
+    private ContextMenu.OnContextMenuItemClickListener contextMenuListener;
 
     // Provide a suitable constructor (depends on the kind of data set)
     public EventsAdapter(Context context, ArrayList<Event> items, RecyclerViewClickListener listener) {
@@ -28,6 +32,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (items != null)
             this.items = items;
         this.listener = listener;
+        this.contextMenuListener = this;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -77,6 +82,35 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void configureEventViewHolder(EventViewHolder eventViewHolder, Event event, int position) {
-        eventViewHolder.bind(position, event, listener);
+        eventViewHolder.bind(context, position, event, listener, contextMenuListener);
+    }
+
+    @Override
+    public void onCreated(int position) {
+
+    }
+
+    @Override
+    public void onCancelClick(int position) {
+        dismissContextMenu();
+    }
+
+    @Override
+    public void onEditClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        dismissContextMenu();
+        Event event = items.get(position);
+        items.remove(position);
+        notifyDataSetChanged();
+        listener.onDelete(position, event.getId());
+    }
+
+    private void dismissContextMenu() {
+        if (ContextMenuManager.getInstance(context).isContextMenuShowing())
+            ContextMenuManager.getInstance(context).hideContextMenu(true);
     }
 }

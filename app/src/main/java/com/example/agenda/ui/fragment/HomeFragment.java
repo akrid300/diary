@@ -23,6 +23,7 @@ import com.example.agenda.ui.data.EventDAO;
 import com.example.agenda.ui.data.EventService;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
 import com.example.agenda.ui.model.Event;
+import com.example.agenda.ui.utils.ContextMenuManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,12 +91,26 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         holidayAdapter = new EventsAdapter(getContext(), events, this);
         eventsList.setAdapter(holidayAdapter);
 
+
+        eventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                ContextMenuManager.getInstance(getActivity()).onScrolled(dy, false);
+            }
+        });
+
         return root;
     }
 
     @Override
     public void onClick(int position) {
 
+    }
+
+    @Override
+    public void onDelete(int position, Long eventId) {
+        eventService.deleteEventById(eventId);
     }
 
     @Override
@@ -113,6 +128,13 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         super.onResume();
 
         checkEmptyList();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        ContextMenuManager.getInstance(getActivity()).hideContextMenu(true);
+        super.onDestroyView();
     }
 
     private void checkEmptyList() {

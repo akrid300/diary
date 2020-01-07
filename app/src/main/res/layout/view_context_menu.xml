@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/buttonEdit"
+        style="@style/ContextMenuButton"
+        android:text="@string/edit"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        style="@style/ContextMenuButton"
+        android:textAllCaps="false"
+        android:text="@string/delete" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightGrey" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:textAllCaps="false"
+        style="@style/ContextMenuButton"
+        android:text="@string/cancel" />
+
+</merge>
