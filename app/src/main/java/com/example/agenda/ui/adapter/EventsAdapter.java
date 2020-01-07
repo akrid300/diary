@@ -10,22 +10,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agenda.R;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
-import com.example.agenda.ui.model.EventModel;
+import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Annotations;
 import com.example.agenda.ui.viewholder.EventViewHolder;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<EventModel> items = new ArrayList<>();
+    private ArrayList<Event> items = new ArrayList<>();
     private Context context;
     private RecyclerViewClickListener listener;
 
     // Provide a suitable constructor (depends on the kind of data set)
-    public EventsAdapter(Context context, ArrayList<EventModel> items, RecyclerViewClickListener listener) {
+    public EventsAdapter(Context context, ArrayList<Event> items, RecyclerViewClickListener listener) {
         this.context = context;
         if (items != null)
             this.items = items;
@@ -40,7 +38,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof EventModel) {
+        if (items.get(position) instanceof Event) {
             return Annotations.CardType.EVENT;
         }
         return -1;
@@ -70,15 +68,15 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         switch (viewHolder.getItemViewType()) {
             case Annotations.CardType.EVENT:
                 EventViewHolder searchViewHolder = (EventViewHolder) viewHolder;
-                EventModel eventModel = items.get(position);
-                configureEventViewHolder(searchViewHolder, eventModel, position);
+                Event event = items.get(position);
+                configureEventViewHolder(searchViewHolder, event, position);
                 break;
             default:
                 break;
         }
     }
 
-    private void configureEventViewHolder(EventViewHolder eventViewHolder, EventModel eventModel, int position) {
-        eventViewHolder.bind(position, eventModel, listener);
+    private void configureEventViewHolder(EventViewHolder eventViewHolder, Event event, int position) {
+        eventViewHolder.bind(position, event, listener);
     }
 }

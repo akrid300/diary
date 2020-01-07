@@ -1,8 +1,6 @@
 package com.example.agenda.ui.data;
 
-import android.database.Cursor;
-
-import com.example.agenda.ui.model.EventModel;
+import com.example.agenda.ui.model.Event;
 
 import java.util.List;
 
@@ -15,17 +13,17 @@ public class EventService implements EventDAO {
     }
 
     @Override
-    public Long addEvent(EventModel item) {
+    public Long addEvent(Event item) {
         return tableInstance.addEvent(item);
     }
 
     @Override
-    public List<EventModel> getEvents() {
+    public List<Event> getEvents() {
         return tableInstance.getEvents();
     }
 
     @Override
-    public EventModel getEventById(Long id) {
+    public Event getEventById(Long id) {
         return tableInstance.getEventById(id);
     }
 
@@ -35,7 +33,7 @@ public class EventService implements EventDAO {
     }
 
     @Override
-    public void deleteEvent(EventModel item) {
+    public void deleteEvent(Event item) {
         tableInstance.deleteEvent(item);
     }
 

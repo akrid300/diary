@@ -1,0 +1,63 @@
+[
+  {
+    "type": "Home",
+    "name": "Icon Residence",
+    "latitude": 44.454056,
+    "longitude": 26.072869
+  },
+  {
+    "type": "Office",
+    "name": "The Bridge",
+    "latitude": 44.445196,
+    "longitude": 26.060214
+  },
+  {
+    "type": "Bar",
+    "name": "Interbelic",
+    "latitude": 44.433018,
+    "longitude": 26.096699
+  },
+  {
+    "type": "Restaurant",
+    "name": "Hard Rock Cafe",
+    "latitude": 44.475592,
+    "longitude": 26.076267
+  },
+  {
+    "type": "Hospital",
+    "name": "Euroclinic Hospital - Regina Maria",
+    "latitude": 44.454582,
+    "longitude": 26.100947
+
+  },
+  {
+    "type": "Club",
+    "name": "BOA - Beats of Angels",
+    "latitude": 44.475095,
+    "longitude": 26.076063
+  },
+  {
+    "type": "Gym",
+    "name": "World Class America House",
+    "latitude": 44.452393,
+    "longitude": 26.081949
+  },
+  {
+    "type": "School",
+    "name": "Bucharest University of Economic Studies",
+    "latitude": 44.447564,
+    "longitude": 26.096787
+  },
+  {
+    "type": "Mall",
+    "name": "Banesa Shopping Center",
+    "latitude": 44.506864,
+    "longitude": 26.090022
+  },
+  {
+    "type": "Supermarket",
+    "name": "Carrefour Orhideea",
+    "latitude": 44.444535,
+    "longitude": 26.063273
+  }
+]

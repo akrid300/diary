@@ -6,13 +6,23 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.agenda.R;
+import com.example.agenda.ui.data.DatabaseInstance;
+import com.example.agenda.ui.data.LocationDAO;
+import com.example.agenda.ui.data.LocationService;
+import com.example.agenda.ui.model.Location;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -46,10 +56,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        // Add a marker in Sydney and move the camera
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        //LocationService
+        DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getApplicationContext());
+        LocationDAO locationDAO = databaseInstance.locationDAO();
+        LocationService locationService = new LocationService(locationDAO);
+        List<Location> locations = locationService.getLocations();
+
+        if (locations == null) return;
+
+        for(Location location : locations){
+            LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(position).title(location.getName()));
+            builder.include(position);
+        }
+
+        LatLngBounds bounds = builder.build();
+        int padding = 0; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        googleMap.moveCamera(cu);
+        //googleMap.animateCamera(cu);
+
     }
 
 

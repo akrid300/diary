@@ -62,8 +62,6 @@ public class HolidaysFragment extends Fragment {
             holidaysList.setLayoutManager(layoutManager);
             holidaysList.setAdapter(holidayAdapter);
 
-            // array de sarbatori
-            //Log.d("Numar sarbatori", sarbatori.size)
         } catch (IOException e) {
             e.printStackTrace();
         }

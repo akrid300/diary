@@ -5,10 +5,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.Relation;
 
 @Entity(tableName = "Event")
-public class EventModel {
+public class Event {
 
     @PrimaryKey
     @ColumnInfo(name = "event_id")
@@ -23,11 +22,11 @@ public class EventModel {
     private String type;
     private String description;
 
-    @Embedded private LocationModel location;
+    @Embedded private Location location;
 
-    public EventModel() {}
+    public Event() {}
 
-    public EventModel(String title, String date, String addedDate, String type, String details, LocationModel location) {
+    public Event(String title, String date, String addedDate, String type, String details, Location location) {
         this.title = title;
         this.date = date;
         this.addedDate = addedDate;
@@ -85,11 +84,11 @@ public class EventModel {
         this.description = description;
     }
 
-    public LocationModel getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(LocationModel location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 }

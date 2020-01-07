@@ -1,8 +1,6 @@
 package com.example.agenda.ui.data;
 
-import android.database.Cursor;
-
-import com.example.agenda.ui.model.LocationModel;
+import com.example.agenda.ui.model.Location;
 
 import java.util.List;
 
@@ -15,27 +13,27 @@ public class LocationService implements LocationDAO {
     }
 
     @Override
-    public Long addLocation(LocationModel item) {
+    public Long addLocation(Location item) {
         return tableInstance.addLocation(item);
     }
 
     @Override
-    public List<LocationModel> getLocations() {
+    public List<Location> getLocations() {
         return tableInstance.getLocations();
     }
 
     @Override
-    public LocationModel getLocationById(Long id) {
+    public Location getLocationById(Long id) {
         return tableInstance.getLocationById(id);
     }
 
     @Override
-    public LocationModel getLocationByName(String name) {
+    public Location getLocationByName(String name) {
         return tableInstance.getLocationByName(name);
     }
 
     @Override
-    public void deleteLocation(LocationModel item) {
+    public void deleteLocation(Location item) {
         tableInstance.deleteLocation(item);
     }
 

@@ -8,14 +8,24 @@ import com.example.agenda.ui.data.DatabaseInstance;
 import com.example.agenda.ui.data.LocationDAO;
 import com.example.agenda.ui.data.LocationService;
 import com.example.agenda.ui.data.UserPrefs;
-import com.example.agenda.ui.model.LocationModel;
+import com.example.agenda.ui.model.HolidayModel;
+import com.example.agenda.ui.model.Location;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,21 +48,30 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         setLocations();
+
     }
 
     private void setLocations() {
 
-        LocationModel[] values = new LocationModel[]{
-                new LocationModel(1L, "Home"),
-                new LocationModel(2L, "Office"),
-                new LocationModel(3L, "Bar"),
-                new LocationModel(4L, "Restaurant"),
-                new LocationModel(5L, "Hospital"),
-                new LocationModel(6L, "Club"),
-                new LocationModel(7L, "Gym"),
-                new LocationModel(8L, "School"),
-                new LocationModel(9L, "Mall"),
-                new LocationModel(10L, "Supermarket")};
+
+        ArrayList<Location> locations = new ArrayList<>();
+
+        try {
+            InputStream is = getApplicationContext().getAssets().open("locations.json");
+            Gson gson = new GsonBuilder().create();
+
+            JsonReader reader = new JsonReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                Location location = gson.fromJson(reader, Location.class);
+                if (location != null) {
+                    locations.add(location);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         //LocationService
@@ -60,12 +79,12 @@ public class MainActivity extends AppCompatActivity {
         LocationDAO locationDAO = databaseInstance.locationDAO();
         LocationService locationService = new LocationService(locationDAO);
 
-        for(LocationModel item : values){
+        for(Location item : locations){
             locationService.addLocation(item);
         }
 
-        locationService.updateLocation("Park",4L);
-        locationService.deleteLocationById(3L);
+        //locationService.updateLocation("Park",4L);
+        //locationService.deleteLocationById(3L);
     }
 
 }

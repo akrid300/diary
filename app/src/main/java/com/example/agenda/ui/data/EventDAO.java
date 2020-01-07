@@ -1,14 +1,12 @@
 package com.example.agenda.ui.data;
 
-import android.database.Cursor;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.agenda.ui.model.EventModel;
+import com.example.agenda.ui.model.Event;
 
 import java.util.List;
 
@@ -16,19 +14,19 @@ import java.util.List;
 public interface EventDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long addEvent(EventModel item);
+    Long addEvent(Event item);
 
     @Query("SELECT * FROM Event")
-    List<EventModel> getEvents();
+    List<Event> getEvents();
 
     @Query("SELECT event_id FROM Event order by event_id desc")
     Long getLatestEventById();
 
     @Query("SELECT * FROM Event WHERE event_id=:id")
-    EventModel getEventById(Long id);
+    Event getEventById(Long id);
 
     @Delete
-    void deleteEvent(EventModel item);
+    void deleteEvent(Event item);
 
     @Query("DELETE FROM Event WHERE event_id=:id")
     void deleteEventById(Long id);

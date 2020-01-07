@@ -19,11 +19,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.agenda.R;
+import com.example.agenda.ui.activity.DrawActivity;
 import com.example.agenda.ui.data.DatabaseInstance;
 import com.example.agenda.ui.data.EventDAO;
 import com.example.agenda.ui.data.EventService;
 import com.example.agenda.ui.data.UserPrefs;
-import com.example.agenda.ui.model.EventModel;
+import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Utils;
 
 import java.io.FileNotFoundException;
@@ -35,12 +36,14 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     private int RESULT_LOAD_IMAGE = 100;
+    private int RESULT_DRAW_IMAGE = 200;
     private ImageView avatarImage;
     private EditText nameEditText;
     private EditText emailEditText;
     private EditText ageEditText;
     private TextView eventsTextView;
     private Button loadImageButton;
+    private Button drawButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class ProfileFragment extends Fragment {
         ageEditText = root.findViewById(R.id.profileAge);
         eventsTextView = root.findViewById(R.id.profileEvents);
         loadImageButton = root.findViewById(R.id.buttonLoadImage);
+        drawButton = root.findViewById(R.id.buttonnDraw);
 
         String name = UserPrefs.getInstance().getUserName();
         String email = UserPrefs.getInstance().getUserEmail();
@@ -89,6 +93,13 @@ public class ProfileFragment extends Fragment {
         }
 
 
+        drawButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), DrawActivity.class);
+                startActivityForResult(intent, RESULT_DRAW_IMAGE);
+            }
+        });
         loadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,7 +152,7 @@ public class ProfileFragment extends Fragment {
         EventDAO eventDAO = databaseInstance.eventDAO();
         EventService eventService = new EventService(eventDAO);
 
-        List<EventModel> events = eventService.getEvents();
+        List<Event> events = eventService.getEvents();
         Integer count = events != null ? events.size() : 0;
         String eventsNumber = count.toString();
 
@@ -166,12 +177,16 @@ public class ProfileFragment extends Fragment {
                 UserPrefs.getInstance().setAvatar(imageUri.toString());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Unable to get image", Toast.LENGTH_LONG).show();
             }
 
-        }else {
-            Toast.makeText(getActivity(), "You haven't picked Image",Toast.LENGTH_LONG).show();
+        }
+        else if (resultCode == RESULT_OK && requestCode == RESULT_DRAW_IMAGE && data != null && getActivity() != null) {
+            byte[] byteArray = data.getByteArrayExtra("drawing");
+            if (byteArray != null) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                avatarImage.setImageBitmap(bmp);
+            }
         }
     }
-
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +22,7 @@ import com.example.agenda.ui.data.DatabaseInstance;
 import com.example.agenda.ui.data.EventDAO;
 import com.example.agenda.ui.data.EventService;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
-import com.example.agenda.ui.model.EventModel;
+import com.example.agenda.ui.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,12 +84,11 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         eventsList.setLayoutManager(layoutManager);
 
-        List<EventModel> list = eventService.getEvents();
-        ArrayList<EventModel> events = new ArrayList<>(list);
+        List<Event> list = eventService.getEvents();
+        ArrayList<Event> events = new ArrayList<>(list);
 
         holidayAdapter = new EventsAdapter(getContext(), events, this);
         eventsList.setAdapter(holidayAdapter);
-
 
         return root;
     }
@@ -116,8 +116,8 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
     }
 
     private void checkEmptyList() {
-        List<EventModel> list = eventService.getEvents();
-        ArrayList<EventModel> events = new ArrayList<>(list);
+        List<Event> list = eventService.getEvents();
+        ArrayList<Event> events = new ArrayList<>(list);
 
         if (events.size() > 0) {
             holidayAdapter = new EventsAdapter(getContext(), events, this);

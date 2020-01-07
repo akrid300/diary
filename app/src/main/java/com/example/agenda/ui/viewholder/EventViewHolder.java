@@ -1,8 +1,6 @@
 package com.example.agenda.ui.viewholder;
 
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -11,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agenda.R;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
-import com.example.agenda.ui.model.EventModel;
+import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Utils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class EventViewHolder  extends RecyclerView.ViewHolder {
@@ -24,25 +21,25 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    public void bind(int position, EventModel eventModel, RecyclerViewClickListener listener) {
+    public void bind(int position, Event event, RecyclerViewClickListener listener) {
         ImageView menuButton = itemView.findViewById(R.id.menu_button);
         TextView eventTitle = itemView.findViewById(R.id.titleTextView);
         TextView eventDate = itemView.findViewById(R.id.dateTextView);
         SeekBar seekBar = itemView.findViewById(R.id.dateSeekBar);
         TextView description = itemView.findViewById(R.id.descriptionTextView);
 
-        eventTitle.setText(eventModel.getTitle());
+        eventTitle.setText(event.getTitle());
 
         Calendar startDate = Calendar.getInstance();
         Calendar endDate = Calendar.getInstance();
         Calendar curentDate = Calendar.getInstance();
 
-        if (!Utils.isStringNullOrEmpty(eventModel.getAddedDate())) {
-            startDate = Utils.dateFromString(eventModel.getAddedDate());
+        if (!Utils.isStringNullOrEmpty(event.getAddedDate())) {
+            startDate = Utils.dateFromString(event.getAddedDate());
         }
 
-        if (!Utils.isStringNullOrEmpty(eventModel.getDate())) {
-            endDate = Utils.dateFromString(eventModel.getDate());
+        if (!Utils.isStringNullOrEmpty(event.getDate())) {
+            endDate = Utils.dateFromString(event.getDate());
         }
 
         int progress = 100;
@@ -67,8 +64,8 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
 
 
 
-        if (!Utils.isStringNullOrEmpty(eventModel.getDate())) {
-            eventDate.setText(eventModel.getDate());
+        if (!Utils.isStringNullOrEmpty(event.getDate())) {
+            eventDate.setText(event.getDate());
             eventDate.setVisibility(View.VISIBLE);
             seekBar.setVisibility(View.VISIBLE);
         }
@@ -77,8 +74,8 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
             seekBar.setVisibility(View.GONE);
         }
 
-        if (!Utils.isStringNullOrEmpty(eventModel.getDescription())) {
-            description.setText(eventModel.getDescription());
+        if (!Utils.isStringNullOrEmpty(event.getDescription())) {
+            description.setText(event.getDescription());
             description.setVisibility(View.VISIBLE);
         }
         else {

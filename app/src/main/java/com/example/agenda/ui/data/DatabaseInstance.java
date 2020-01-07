@@ -2,19 +2,15 @@ package com.example.agenda.ui.data;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
-import androidx.room.DatabaseConfiguration;
-import androidx.room.InvalidationTracker;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-import com.example.agenda.ui.model.EventModel;
-import com.example.agenda.ui.model.LocationModel;
+import com.example.agenda.ui.model.Event;
+import com.example.agenda.ui.model.Location;
 
 
-@Database(entities = {EventModel.class, LocationModel.class}, version = 1, exportSchema = false)
+@Database(entities = {Event.class, Location.class}, version = 1, exportSchema = false)
 public abstract class DatabaseInstance extends RoomDatabase {
     private static volatile DatabaseInstance dbInstance; //saved on data segment, can be accessed from any part of the code.
     //volatile - ACCESSED AND VISIBLE FROM ANY THREADS OF THE PROCESS. Exactly like static, but at the memory level.

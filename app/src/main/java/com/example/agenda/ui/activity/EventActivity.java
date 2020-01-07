@@ -1,7 +1,5 @@
 package com.example.agenda.ui.activity;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 
 import com.example.agenda.ui.data.DatabaseInstance;
@@ -11,8 +9,8 @@ import com.example.agenda.ui.data.LocationDAO;
 import com.example.agenda.ui.data.LocationService;
 import com.example.agenda.ui.fragment.DatePickerDialogFragment;
 import com.example.agenda.ui.listener.DateListener;
-import com.example.agenda.ui.model.EventModel;
-import com.example.agenda.ui.model.LocationModel;
+import com.example.agenda.ui.model.Event;
+import com.example.agenda.ui.model.Location;
 import com.example.agenda.ui.utils.Utils;
 
 import androidx.annotation.NonNull;
@@ -53,7 +51,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private EventDAO eventDAO;
     private EventService eventService;
 
-    private EventModel eventModel;
+    private Event event;
 
     DatePickerDialogFragment mDatePickerDialogFragment;
 
@@ -67,7 +65,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         locationSpinner = findViewById(R.id.locationSpinner);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         doneButton = findViewById(R.id.doneButton);
-        Button backButton = findViewById(R.id.doneButton);
+        Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,27 +108,27 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "Unable to save event. Please add title.", Toast.LENGTH_SHORT).show();
         }
 
-        eventModel = new EventModel();
-        eventModel.setTitle(title);
+        event = new Event();
+        event.setTitle(title);
 
         if (!isStringNullOrEmpty(description))
-            eventModel.setDescription(description);
+            event.setDescription(description);
 
         if (!isStringNullOrEmpty(date))
-            eventModel.setDate(date);
+            event.setDate(date);
 
         if (!isStringNullOrEmpty(location) && databaseInstance != null && locationDAO != null && locationService != null) {
-            LocationModel locationModel = locationService.getLocationByName(location);
-            eventModel.setLocation(locationModel);
+            Location locationModel = locationService.getLocationByName(location);
+            event.setLocation(locationModel);
         }
 
 
         if (databaseInstance != null && eventDAO != null && eventService != null) {
             Calendar calendar = Calendar.getInstance();
             String currentDate = Utils.stringFromDate(calendar);
-            eventModel.setAddedDate(currentDate);
+            event.setAddedDate(currentDate);
 
-            eventService.addEvent(eventModel);
+            eventService.addEvent(event);
         }
 
         finish();
@@ -160,9 +158,10 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         ArrayList<String> spinnerItems = new ArrayList<>();
 
-        List<LocationModel> locations = locationService.getLocations();
-        for (LocationModel location : locations) {
-            spinnerItems.add(location.getName());
+        List<Location> locations = locationService.getLocations();
+        for (Location location : locations) {
+            String locationNameAndType = location.getName() + " - " + location.getType();
+            spinnerItems.add(locationNameAndType);
         }
 
         spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, spinnerItems) {

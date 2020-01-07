@@ -1,11 +1,8 @@
 package com.example.agenda.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -25,8 +22,8 @@ import com.example.agenda.ui.data.EventDAO;
 import com.example.agenda.ui.data.EventService;
 import com.example.agenda.ui.data.LocationDAO;
 import com.example.agenda.ui.data.LocationService;
-import com.example.agenda.ui.model.EventModel;
-import com.example.agenda.ui.model.LocationModel;
+import com.example.agenda.ui.model.Event;
+import com.example.agenda.ui.model.Location;
 import com.example.agenda.ui.utils.Utils;
 
 import java.util.ArrayList;
@@ -52,7 +49,7 @@ public class ContentFragment  extends Fragment {
     private EventDAO eventDAO;
     private EventService eventService;
 
-    private EventModel eventModel;
+    private Event event;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -99,27 +96,27 @@ public class ContentFragment  extends Fragment {
             Toast.makeText(getActivity(), "Unable to save event. Please add title.", Toast.LENGTH_SHORT).show();
         }
 
-        eventModel = new EventModel();
-        eventModel.setTitle(title);
+        event = new Event();
+        event.setTitle(title);
 
         if (!isStringNullOrEmpty(description))
-            eventModel.setDescription(description);
+            event.setDescription(description);
 
         if (!isStringNullOrEmpty(date))
-            eventModel.setDate(date);
+            event.setDate(date);
 
         if (!isStringNullOrEmpty(location) && databaseInstance != null && locationDAO != null && locationService != null) {
-            LocationModel locationModel = locationService.getLocationByName(location);
-            eventModel.setLocation(locationModel);
+            Location locationModel = locationService.getLocationByName(location);
+            event.setLocation(locationModel);
         }
 
 
         if (databaseInstance != null && eventDAO != null && eventService != null) {
             Calendar calendar = Calendar.getInstance();
             String currentDate = Utils.stringFromDate(calendar);
-            eventModel.setAddedDate(currentDate);
+            event.setAddedDate(currentDate);
 
-            eventService.addEvent(eventModel);
+            eventService.addEvent(event);
         }
 
     }
@@ -163,8 +160,8 @@ public class ContentFragment  extends Fragment {
 
         ArrayList<String> spinnerItems = new ArrayList<>();
 
-        List<LocationModel> locations = locationService.getLocations();
-        for (LocationModel location : locations) {
+        List<Location> locations = locationService.getLocations();
+        for (Location location : locations) {
             spinnerItems.add(location.getName());
         }
 
