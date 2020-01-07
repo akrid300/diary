@@ -30,6 +30,13 @@
                 android:layout_gravity="center"
                 tools:srcCompat="@tools:sample/avatars" />
 
+            <Button
+                android:id="@+id/buttonLoadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="@string/load_image"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -111,7 +118,7 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="0"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 

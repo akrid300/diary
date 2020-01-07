@@ -8,16 +8,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agenda.R;
 import com.example.agenda.ui.activity.EventActivity;
+import com.example.agenda.ui.activity.MapsActivity;
 import com.example.agenda.ui.adapter.EventsAdapter;
 import com.example.agenda.ui.data.DatabaseInstance;
 import com.example.agenda.ui.data.EventDAO;
@@ -31,6 +29,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements RecyclerViewClickListener {
 
     private Button addEventButton;
+    private Button viewOnMap;
     private TextView emptyList;
 
     private ArrayList events = new ArrayList();
@@ -46,9 +45,10 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        addEventButton = root.findViewById(R.id.add_event_button);
+        addEventButton = root.findViewById(R.id.addEventButton);
+        viewOnMap = root.findViewById(R.id.mapButton);
         emptyList = root.findViewById(R.id.emptyList);
-        eventsList = root.findViewById(R.id.events_list);
+        eventsList = root.findViewById(R.id.eventsList);
 
         if (events.size() == 0) {
             emptyList.setVisibility(View.VISIBLE);
@@ -63,6 +63,14 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
             @Override
             public void onClick(View view) {
                 Intent eventIntent = new Intent(getActivity(), EventActivity.class);
+                startActivity(eventIntent);
+            }
+        });
+
+        viewOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent eventIntent = new Intent(getActivity(), MapsActivity.class);
                 startActivity(eventIntent);
             }
         });

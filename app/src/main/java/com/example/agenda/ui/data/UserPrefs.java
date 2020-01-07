@@ -4,10 +4,10 @@ import android.content.SharedPreferences;
 
 public class UserPrefs {
 
+    private String USER_AVATAR = "USER_AVATAR";
     private String USER_NAME = "USER_NAME";
     private String USER_EMAIL = "USER_EMAIL";
     private String USER_AGE = "USER_AGE";
-    private String USER_EVENTS = "USER_EVENTS";
 
     //region  Main Constructor
 
@@ -23,10 +23,19 @@ public class UserPrefs {
 
     private SharedPreferences sharedPreferences;
 
-    public UserPrefs(SharedPreferences sharedPreferences) {
+    private UserPrefs(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
     }
     //endregion
+
+
+    public String getAvatar() {
+        return sharedPreferences.getString(USER_AVATAR, "");
+    }
+
+    public void setAvatar(String userAvatar) {
+        sharedPreferences.edit().putString(USER_AVATAR, userAvatar).apply();
+    }
 
 
     public String getUserName() {
@@ -53,11 +62,4 @@ public class UserPrefs {
         sharedPreferences.edit().putInt(USER_AGE,userAge).apply();
     }
 
-    public Integer getUserEvents(){
-        return sharedPreferences.getInt(USER_EVENTS,0);
-    }
-
-    public void setUserEvents(int userEvents){
-        sharedPreferences.edit().putInt(USER_EVENTS, userEvents).apply();
-    }
 }
