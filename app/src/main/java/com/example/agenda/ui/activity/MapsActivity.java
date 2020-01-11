@@ -7,8 +7,11 @@ import android.util.Log;
 
 import com.example.agenda.R;
 import com.example.agenda.ui.data.DatabaseInstance;
+import com.example.agenda.ui.data.EventDAO;
+import com.example.agenda.ui.data.EventService;
 import com.example.agenda.ui.data.LocationDAO;
 import com.example.agenda.ui.data.LocationService;
+import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.model.Location;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.maps.CameraUpdate;
@@ -65,11 +68,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //LocationService
         DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getApplicationContext());
-        LocationDAO locationDAO = databaseInstance.locationDAO();
-        LocationService locationService = new LocationService(locationDAO);
-        List<Location> locations = locationService.getLocations();
+//        LocationDAO locationDAO = databaseInstance.locationDAO();
+//        LocationService locationService = new LocationService(locationDAO);
+//        List<Location> locations = locationService.getLocations();
 
-        if (locations == null) return;
+        EventDAO eventDAO = databaseInstance.eventDAO();
+        EventService eventService = new EventService(eventDAO);
+        List<Event> events = eventService.getEvents();
+        List<Location> locations = new ArrayList<>();
+
+        for (Event event : events) {
+            if (event.getLocation() != null)
+                locations.add(event.getLocation());
+        }
+
+        if (locations.size() == 0) {
+            LatLng bucharest = new LatLng(-44.4268, 26.1025);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(bucharest));
+            return;
+        }
 
         for(Location location : locations){
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());

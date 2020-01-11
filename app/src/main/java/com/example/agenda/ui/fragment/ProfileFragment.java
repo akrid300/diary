@@ -1,10 +1,15 @@
 package com.example.agenda.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.agenda.R;
@@ -27,16 +33,20 @@ import com.example.agenda.ui.data.UserPrefs;
 import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Utils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
     private int RESULT_LOAD_IMAGE = 100;
     private int RESULT_DRAW_IMAGE = 200;
+    private static int MY_PERMISSIONS_REQUEST = 300;
     private ImageView avatarImage;
     private EditText nameEditText;
     private EditText emailEditText;
@@ -75,23 +85,7 @@ public class ProfileFragment extends Fragment {
             ageEditText.setText(ageString);
         }
 
-        String avatar = UserPrefs.getInstance().getAvatar();
-        if (avatar != null && !avatar.isEmpty() && getActivity() != null) {
-            try {
-                Uri imageUri = Uri.parse(avatar);
-                InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                avatarImage.setImageBitmap(selectedImage);
-                UserPrefs.getInstance().setAvatar(imageUri.toString());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
-            }
-        }
-        else {
-            Utils.loadImageFromURLNoPlaceholders("https://publicdomainvectors.org/photos/abstract-user-flat-4.png", avatarImage);
-        }
-
+        loadImage();
 
         drawButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +168,8 @@ public class ProfileFragment extends Fragment {
                 InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 avatarImage.setImageBitmap(selectedImage);
-                UserPrefs.getInstance().setAvatar(imageUri.toString());
+                String r = getRealPathFromURI(getContext(), imageUri);
+                UserPrefs.getInstance().setAvatar(r);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(getActivity(), "Unable to get image", Toast.LENGTH_LONG).show();
@@ -186,6 +181,88 @@ public class ProfileFragment extends Fragment {
             if (byteArray != null) {
                 Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 avatarImage.setImageBitmap(bmp);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == MY_PERMISSIONS_REQUEST) {
+
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                loadImage();
+            }
+        }
+    }
+
+    private void loadImage() {
+        String avatar = UserPrefs.getInstance().getAvatar();
+        if (avatar != null && !avatar.isEmpty() && getActivity() != null) {
+            try {
+                Uri imageUri = Uri.parse(avatar);
+                if (ContextCompat.checkSelfPermission(getActivity(), WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(getActivity(), READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                    // Permission is not granted
+                    if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)
+                            && shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
+                        // Show an explanation to the user *asynchronously* -- don't block
+                        // this thread waiting for the user's response! After the user
+                        // sees the explanation, try again to request the permission.
+                    } else {
+                        // No explanation needed; request the permission
+                        requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,
+                                        READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST);
+
+                        // MY_PERMISSIONS_REQUEST is an
+                        // app-defined int constant. The callback method gets the
+                        // result of the request.
+                    }
+                } else {
+
+                    InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                    Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    avatarImage.setImageBitmap(selectedImage);
+                    if ( imageStream != null ) imageStream.close();
+                }
+
+
+//                File imgFile = new  File(avatar);
+//
+//                if(imgFile.exists()){
+//                     avatarImage.setImageURI(Uri.fromFile(imgFile));
+//                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Utils.loadImageFromURLNoPlaceholders("https://publicdomainvectors.org/photos/abstract-user-flat-4.png", avatarImage);
+                Toast.makeText(getActivity(), "Unable to load image", Toast.LENGTH_LONG).show();
+            }
+        }
+        else {
+            Utils.loadImageFromURLNoPlaceholders("https://publicdomainvectors.org/photos/abstract-user-flat-4.png", avatarImage);
+        }
+    }
+
+    private String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            if (cursor == null) return "";
+            cursor.moveToFirst();
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            Log.e("Path", "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
     }

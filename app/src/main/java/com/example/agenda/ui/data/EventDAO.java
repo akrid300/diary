@@ -16,7 +16,7 @@ public interface EventDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long addEvent(Event item);
 
-    @Query("SELECT * FROM Event")
+    @Query("SELECT * FROM Event order by event_id desc")
     List<Event> getEvents();
 
     @Query("SELECT event_id FROM Event order by event_id desc")
