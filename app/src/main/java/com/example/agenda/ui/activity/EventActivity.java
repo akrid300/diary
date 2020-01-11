@@ -1,6 +1,5 @@
 package com.example.agenda.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.agenda.ui.data.DatabaseInstance;
@@ -27,8 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.agenda.R;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,7 +122,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         Location location = event.getLocation();
         Integer locationPosition = null;
         if (location != null) {
-            String locationNameAndType = getLocationWtihType(location);
+            String locationNameAndType = getLocationWithType(location);
             locationPosition = spinnerItems.indexOf(locationNameAndType);
         }
 
@@ -217,14 +214,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         List<Location> locations = locationService.getLocations();
         for (Location location : locations) {
-            String locationNameAndType = getLocationWtihType(location);
+            String locationNameAndType = getLocationWithType(location);
             spinnerItems.add(locationNameAndType);
             locationsList.put(locationNameAndType, location.getId());
 
         }
 
         spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, spinnerItems) {
-
             @NonNull
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
@@ -238,8 +234,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 return v;
             }
         };
-
-
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(spinnerAdapter);
 
@@ -248,7 +242,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private String getLocationWtihType(Location location) {
+    private String getLocationWithType(Location location) {
         return location.getName() + " - " + location.getType();
     }
 }

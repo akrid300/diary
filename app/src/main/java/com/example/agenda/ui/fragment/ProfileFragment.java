@@ -59,16 +59,6 @@ public class ProfileFragment extends Fragment {
     private Button drawButton;
 
 
-    public ProfileFragment() {
-    }
-
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -86,11 +76,11 @@ public class ProfileFragment extends Fragment {
         String email = UserPrefs.getInstance().getUserEmail();
         Integer age = UserPrefs.getInstance().getUserAge();
 
-        if (name != null && !name.trim().isEmpty()) {
+        if (!Utils.isStringNullOrEmpty(name)) {
             nameEditText.setText(name);
         }
 
-        if (email != null && !email.trim().isEmpty()) {
+        if (!Utils.isStringNullOrEmpty(email)) {
             emailEditText.setText(email);
         }
 
