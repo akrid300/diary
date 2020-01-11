@@ -25,7 +25,6 @@ public class ContextMenu extends LinearLayout {
     public ContextMenu(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.view_context_menu, this, true);
-        /*setBackgroundResource(R.drawable.bg_container_shadow);*/
         setOrientation(VERTICAL);
         setLayoutParams(new LayoutParams(Utils.dpToPx(200), ViewGroup.LayoutParams.WRAP_CONTENT));
     }
@@ -34,16 +33,12 @@ public class ContextMenu extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        // int[] pos = new int[2];
-        // getLocationInWindow(pos);
-
         findViewById(R.id.buttonEdit).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 onEditClick();
             }
         });
-
 
         findViewById(R.id.buttonDelete).setOnClickListener(new OnClickListener() {
             @Override

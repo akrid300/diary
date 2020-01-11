@@ -1,6 +1,7 @@
 package com.example.agenda.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agenda.R;
+import com.example.agenda.ui.activity.EventActivity;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
 import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Annotations;
@@ -27,12 +29,17 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private ContextMenu.OnContextMenuItemClickListener contextMenuListener;
 
     // Provide a suitable constructor (depends on the kind of data set)
-    public EventsAdapter(Context context, ArrayList<Event> items, RecyclerViewClickListener listener) {
+    public EventsAdapter(Context context, RecyclerViewClickListener listener) {
         this.context = context;
-        if (items != null)
-            this.items = items;
         this.listener = listener;
         this.contextMenuListener = this;
+    }
+
+    public void setItems(ArrayList<Event> events) {
+        if (items != null) {
+            this.items = events;
+            notifyDataSetChanged();
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -97,7 +104,9 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onEditClick(int position) {
-
+        dismissContextMenu();
+        Event event = items.get(position);
+        if (listener != null) listener.onEditClick(position, event.getId());
     }
 
     @Override

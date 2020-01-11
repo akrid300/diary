@@ -46,4 +46,9 @@ public class EventService implements EventDAO {
     public void updateEvent(String title, String date, String description, Long id) {
         tableInstance.updateEvent(title, date, description, id);
     }
+
+    @Override
+    public void updateEventWithLocation(String title, String date, String description, Long loc_id, String loc_name, String loc_type, Double loc_lat, Double loc_long, Long id) {
+        tableInstance.updateEventWithLocation(title, date, description, loc_id, loc_name, loc_type, loc_lat, loc_long, id);
+    }
 }

@@ -31,6 +31,6 @@ public interface LocationDAO {
     @Query("DELETE FROM Location WHERE location_id=:id")
     void deleteLocationById(Long id);
 
-    @Query("UPDATE Event SET name=:name WHERE location_id=:id")
+    @Query("UPDATE Location SET name=:name WHERE location_id=:id")
     void updateLocation(String name, Long id);
 }

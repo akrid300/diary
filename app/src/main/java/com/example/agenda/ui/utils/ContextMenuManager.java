@@ -140,11 +140,6 @@ public class ContextMenuManager implements View.OnAttachStateChangeListener {
             float yMax = Utils.getScreenHeight(context) - getStatusBarHeight() - contextMenuView.getHeight() - padding;
             if (menuY < padding || menuY > yMax)
                 hideContextMenu(below);
-//            if (Utils.pxToDp((int)contextMenuView.getY(), context) <= 78 && dy > 0)
-//                hideContextMenu(below);
-//            if (Utils.pxToDp((int)contextMenuView.getY() + contextMenuView.getHeight(), context) >=
-//                    Utils.pxToDp(Utils.getScreenHeight(context), context))
-//                hideContextMenu(below);
         }
     }
 
@@ -167,9 +162,6 @@ public class ContextMenuManager implements View.OnAttachStateChangeListener {
         return result;
     }
 
-    protected int getFullTopBarsHeight() {
-        return getStatusBarHeight() + getActionBarSize();
-    }
 
     @Override
     public void onViewAttachedToWindow(View v) {

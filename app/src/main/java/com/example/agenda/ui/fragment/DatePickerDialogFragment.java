@@ -13,11 +13,8 @@ import java.util.Calendar;
 
 public class DatePickerDialogFragment extends DialogFragment implements
         DatePickerDialog.OnDateSetListener {
-    public static final int FLAG_START_DATE = 0;
-    public static final int FLAG_END_DATE = 1;
 
-    private int flag = 0;
-    DateListener listener;
+    private DateListener listener;
 
     public DatePickerDialogFragment(DateListener listener) {
         this.listener = listener;
@@ -33,16 +30,13 @@ public class DatePickerDialogFragment extends DialogFragment implements
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
-    public void setFlag(int i) {
-        flag = i;
-    }
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, monthOfYear, dayOfMonth);
         if (listener != null) {
-            listener.onClick(calendar);
+            listener.onDateClick(calendar);
         }
 
     }

@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +28,11 @@ import com.example.agenda.ui.utils.ContextMenuManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class HomeFragment extends Fragment implements RecyclerViewClickListener {
 
+    private int RESULT_ADD_EVENT = 1000;
     private Button addEventButton;
     private Button viewOnMap;
     private TextView emptyList;
@@ -39,9 +42,9 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
     private DatabaseInstance databaseInstance;
     private EventDAO eventDAO;
     private EventService eventService;
-    RecyclerView eventsList;
+    private RecyclerView eventsList;
 
-    EventsAdapter holidayAdapter;
+    private EventsAdapter eventsAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
             @Override
             public void onClick(View view) {
                 Intent eventIntent = new Intent(getActivity(), EventActivity.class);
-                startActivity(eventIntent);
+                startActivityForResult(eventIntent, RESULT_ADD_EVENT);
             }
         });
 
@@ -88,8 +91,11 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         List<Event> list = eventService.getEvents();
         ArrayList<Event> events = new ArrayList<>(list);
 
-        holidayAdapter = new EventsAdapter(getContext(), events, this);
-        eventsList.setAdapter(holidayAdapter);
+        eventsAdapter = new EventsAdapter(getContext(), this);
+        eventsAdapter.setItems(events);
+        eventsList.setAdapter(eventsAdapter);
+
+        checkEmptyList();
 
 
         eventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -109,27 +115,17 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
     }
 
     @Override
+    public void onEditClick(int position, Long eventId) {
+        Intent intent = new Intent(getContext(), EventActivity.class);
+        intent.putExtra("id", eventId);
+        startActivityForResult(intent, RESULT_ADD_EVENT);
+    }
+
+    @Override
     public void onDelete(int position, Long eventId) {
         eventService.deleteEventById(eventId);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            checkEmptyList();
-        }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
         checkEmptyList();
     }
-
 
     @Override
     public void onDestroyView() {
@@ -138,18 +134,24 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
     }
 
     private void checkEmptyList() {
-        List<Event> list = eventService.getEvents();
-        ArrayList<Event> events = new ArrayList<>(list);
-
-        if (events.size() > 0) {
-            holidayAdapter = new EventsAdapter(getContext(), events, this);
-            eventsList.setAdapter(holidayAdapter);
+        if (eventsAdapter.getItemCount() > 0) {
             eventsList.setVisibility(View.VISIBLE);
             emptyList.setVisibility(View.GONE);
         }
         else {
             eventsList.setVisibility(View.GONE);
             emptyList.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == RESULT_ADD_EVENT ) {
+            ArrayList<Event> events = new ArrayList<>(eventService.getEvents());
+            eventsAdapter.setItems(events);
+            checkEmptyList();
         }
     }
 }

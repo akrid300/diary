@@ -1,5 +1,6 @@
 package com.example.agenda.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.agenda.ui.data.DatabaseInstance;
@@ -16,7 +17,6 @@ import com.example.agenda.ui.utils.Utils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,9 +28,13 @@ import android.widget.Toast;
 
 import com.example.agenda.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+
 
 import static com.example.agenda.ui.utils.Utils.isStringNullOrEmpty;
 
@@ -53,7 +57,12 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     private Event event;
 
+    ArrayList<String> spinnerItems = new ArrayList<>();
+    HashMap<String, Long> locationsList = new HashMap<>();
+
     DatePickerDialogFragment mDatePickerDialogFragment;
+
+    private Long eventId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         locationSpinner = findViewById(R.id.locationSpinner);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         doneButton = findViewById(R.id.doneButton);
+
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +82,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 finish();
             }
         });
+
+        eventId = null;
 
         databaseInstance = DatabaseInstance.getInstance(this);
 
@@ -82,7 +94,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         //EventService
         eventDAO = databaseInstance.eventDAO();
         eventService = new EventService(eventDAO);
-
 
         mDatePickerDialogFragment = new DatePickerDialogFragment(this);
         dateEditText.setOnClickListener(this);
@@ -96,6 +107,38 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            loadEvent(getIntent().getLongExtra("id", 0));
+        }
+
+    }
+
+    private  void loadEvent(Long id) {
+        Event event = eventService.getEventById(id);
+        if (event == null) return;
+
+        eventId = id;
+
+        String title = event.getTitle();
+        String date = event.getDate();
+
+        Location location = event.getLocation();
+        Integer locationPosition = null;
+        if (location != null) {
+            String locationNameAndType = getLocationWtihType(location);
+            locationPosition = spinnerItems.indexOf(locationNameAndType);
+        }
+
+        String description = event.getDescription();
+
+        titleEditText.setText(title);
+        if (!Utils.isStringNullOrEmpty(date))
+            dateEditText.setText(date);
+        if (locationPosition != null)
+            locationSpinner.setSelection(locationPosition);
+        if (!Utils.isStringNullOrEmpty(description))
+            descriptionEditText.setText(description);
+
     }
 
     private void saveEvent() {
@@ -104,47 +147,62 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         String location = locationSpinner.getSelectedItem() != null ? locationSpinner.getSelectedItem().toString() : "";
         String date = dateEditText.getText().toString();
 
+        Location locationModel = null;
+        if (!isStringNullOrEmpty(location) && databaseInstance != null && locationDAO != null && locationService != null) {
+            Long locationId = locationsList.get(location);
+            locationModel = locationService.getLocationById(locationId);
+        }
+
         if (isStringNullOrEmpty(title)) {
             Toast.makeText(this, "Unable to save event. Please add title.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        event = new Event();
-        event.setTitle(title);
+        if (eventId != null) {
+            if (locationModel != null)
+                eventService.updateEventWithLocation(title, date, description, locationModel.getId(),
+                        locationModel.getName(), locationModel.getType(), locationModel.getLatitude(), locationModel.getLongitude(), eventId);
+            else
+                eventService.updateEvent(title, date, description, eventId);
+        }
+        else  {
+            event = new Event();
+            event.setTitle(title);
 
-        if (!isStringNullOrEmpty(description))
-            event.setDescription(description);
+            if (!isStringNullOrEmpty(description))
+                event.setDescription(description);
 
-        if (!isStringNullOrEmpty(date))
-            event.setDate(date);
+            if (!isStringNullOrEmpty(date))
+                event.setDate(date);
 
-        if (!isStringNullOrEmpty(location) && databaseInstance != null && locationDAO != null && locationService != null) {
-            Location locationModel = locationService.getLocationByName(location);
-            event.setLocation(locationModel);
+
+            if (locationModel != null)
+                event.setLocation(locationModel);
+
+
+            if (databaseInstance != null && eventDAO != null && eventService != null) {
+                Calendar calendar = Calendar.getInstance();
+                String currentDate = Utils.stringFromDate(calendar);
+                event.setAddedDate(currentDate);
+
+                eventService.addEvent(event);
+            }
         }
 
-
-        if (databaseInstance != null && eventDAO != null && eventService != null) {
-            Calendar calendar = Calendar.getInstance();
-            String currentDate = Utils.stringFromDate(calendar);
-            event.setAddedDate(currentDate);
-
-            eventService.addEvent(event);
-        }
-
+        setResult(RESULT_OK);
         finish();
-
     }
 
 
     @Override
-    public void onClick(Calendar calendar) {
+    public void onDateClick(Calendar calendar) {
         updateLabel(calendar);
     }
 
     @Override
     public void onClick(View v) {
-        mDatePickerDialogFragment.show(getSupportFragmentManager(), "datePicker");
+        if (!mDatePickerDialogFragment.isAdded())
+            mDatePickerDialogFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
 
@@ -157,12 +215,12 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         if (databaseInstance == null || locationDAO == null || locationService == null) return;
 
-        ArrayList<String> spinnerItems = new ArrayList<>();
-
         List<Location> locations = locationService.getLocations();
         for (Location location : locations) {
-            String locationNameAndType = location.getName() + " - " + location.getType();
+            String locationNameAndType = getLocationWtihType(location);
             spinnerItems.add(locationNameAndType);
+            locationsList.put(locationNameAndType, location.getId());
+
         }
 
         spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, spinnerItems) {
@@ -190,4 +248,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    private String getLocationWtihType(Location location) {
+        return location.getName() + " - " + location.getType();
+    }
 }

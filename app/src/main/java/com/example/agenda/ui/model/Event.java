@@ -5,6 +5,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.agenda.ui.utils.Utils;
 
 @Entity(tableName = "Event")
 public class Event {
@@ -16,21 +19,24 @@ public class Event {
     @NonNull
     private String title;
 
+    @ColumnInfo(name = "date")
     private String date;
+
     @ColumnInfo(name = "added_date")
     private String addedDate;
-    private String type;
+
     private String description;
 
-    @Embedded private Location location;
+    @Embedded(prefix = "location_")
+    private Location location;
 
     public Event() {}
 
-    public Event(String title, String date, String addedDate, String type, String details, Location location) {
+    public Event(String title, String date, String addedDate, String details, Location location) {
         this.title = title;
         this.date = date;
-        this.addedDate = addedDate;
-        this.type = type;
+        if (Utils.isStringNullOrEmpty(addedDate))
+            this.addedDate = addedDate;
         this.description = details;
         this.location = location;
     }
@@ -66,14 +72,6 @@ public class Event {
 
     public void setAddedDate(String addedDate) {
         this.addedDate = addedDate;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getDescription() {
