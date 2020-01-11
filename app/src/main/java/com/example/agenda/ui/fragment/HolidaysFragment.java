@@ -26,6 +26,16 @@ import java.util.ArrayList;
 
 public class HolidaysFragment extends Fragment {
 
+    public HolidaysFragment() {
+    }
+
+    public static HolidaysFragment newInstance() {
+        HolidaysFragment fragment = new HolidaysFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 

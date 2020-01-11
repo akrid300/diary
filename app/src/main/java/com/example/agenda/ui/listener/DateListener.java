@@ -4,6 +4,5 @@ import java.util.Calendar;
 
 public interface DateListener {
 
-
     void onDateClick(Calendar calendar);
 }

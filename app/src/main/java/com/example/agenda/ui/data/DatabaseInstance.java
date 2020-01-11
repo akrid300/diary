@@ -18,7 +18,7 @@ public abstract class DatabaseInstance extends RoomDatabase {
     public abstract EventDAO eventDAO();
     public abstract LocationDAO locationDAO();
 
-    public static DatabaseInstance getInstance(Context context){
+    public static DatabaseInstance getInstance(Context context) {
 
         if(dbInstance == null){
             synchronized (DatabaseInstance.class){
@@ -27,7 +27,7 @@ public abstract class DatabaseInstance extends RoomDatabase {
 
                     dbInstance = Room.databaseBuilder(context.getApplicationContext(),
                             DatabaseInstance.class,
-                            "test.db")
+                            "events.db")
                             .allowMainThreadQueries()
                             .build();
                 }

@@ -74,11 +74,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locations.add(event.getLocation());
         }
 
-        if (locations.size() == 0) {
-            LatLng bucharest = new LatLng(-44.4268, 26.1025);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(bucharest));
-            return;
-        }
 
         for(Location location : locations){
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
@@ -86,8 +81,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             builder.include(position);
         }
 
+
+        if (locations.size() == 0) {
+            LatLng oldTown = new LatLng(44.4330, 26.1024);
+            LatLng romania = new LatLng(45.9432, 24.9668);
+            builder.include(oldTown);
+            builder.include(romania);
+        }
+
         LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
+        int padding = 100; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.moveCamera(cu);
         //googleMap.animateCamera(cu);

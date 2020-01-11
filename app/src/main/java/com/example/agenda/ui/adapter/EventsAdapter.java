@@ -1,7 +1,6 @@
 package com.example.agenda.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agenda.R;
-import com.example.agenda.ui.activity.EventActivity;
 import com.example.agenda.ui.listener.RecyclerViewClickListener;
 import com.example.agenda.ui.model.Event;
-import com.example.agenda.ui.utils.Annotations;
 import com.example.agenda.ui.utils.ContextMenu;
 import com.example.agenda.ui.utils.ContextMenuManager;
 import com.example.agenda.ui.viewholder.EventViewHolder;
@@ -48,44 +45,22 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return items.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (items.get(position) instanceof Event) {
-            return Annotations.CardType.EVENT;
-        }
-        return -1;
-    }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-
-        switch (viewType) {
-            case Annotations.CardType.EVENT:
-                View eventView = inflater.inflate(R.layout.list_item_event, viewGroup, false);
-                viewHolder = new EventViewHolder(eventView);
-                break;
-            default:
-                View emptyList = inflater.inflate(android.R.layout.simple_list_item_1, viewGroup, false);
-                viewHolder = new EventViewHolder(emptyList);
-                break;
-        }
+        View eventView = inflater.inflate(R.layout.list_item_event, viewGroup, false);
+        viewHolder = new EventViewHolder(eventView);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        switch (viewHolder.getItemViewType()) {
-            case Annotations.CardType.EVENT:
-                EventViewHolder searchViewHolder = (EventViewHolder) viewHolder;
-                Event event = items.get(position);
-                configureEventViewHolder(searchViewHolder, event, position);
-                break;
-            default:
-                break;
-        }
+        EventViewHolder searchViewHolder = (EventViewHolder) viewHolder;
+        Event event = items.get(position);
+        configureEventViewHolder(searchViewHolder, event, position);
     }
 
     private void configureEventViewHolder(EventViewHolder eventViewHolder, Event event, int position) {

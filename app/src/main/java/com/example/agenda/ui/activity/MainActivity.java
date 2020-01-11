@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         UserPrefs.setUpUserPrefs(getSharedPreferences(getPackageName() + ".default", Activity.MODE_PRIVATE));
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_holidays, R.id.navigation_holidays)
+                R.id.navigation_home, R.id.navigation_profile, R.id.navigation_holidays)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -54,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setLocations() {
 
+
+        //LocationService
+        DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getApplicationContext());
+        LocationDAO locationDAO = databaseInstance.locationDAO();
+        LocationService locationService = new LocationService(locationDAO);
+        List<Location> existingLocations = locationService.getLocations();
+
+        if (existingLocations != null && existingLocations.size() > 0)
+            return;
 
         ArrayList<Location> locations = new ArrayList<>();
 
@@ -74,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        //LocationService
-        DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getApplicationContext());
-        LocationDAO locationDAO = databaseInstance.locationDAO();
-        LocationService locationService = new LocationService(locationDAO);
 
         for(Location item : locations){
             locationService.addLocation(item);

@@ -46,6 +46,16 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
 
     private EventsAdapter eventsAdapter;
 
+    public HomeFragment() {
+    }
+
+    public static HomeFragment newInstance() {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -88,8 +98,7 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         eventsList.setLayoutManager(layoutManager);
 
-        List<Event> list = eventService.getEvents();
-        ArrayList<Event> events = new ArrayList<>(list);
+        ArrayList<Event> events = new ArrayList<>(eventService.getEvents());
 
         eventsAdapter = new EventsAdapter(getContext(), this);
         eventsAdapter.setItems(events);

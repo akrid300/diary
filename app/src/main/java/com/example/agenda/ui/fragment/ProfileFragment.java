@@ -8,7 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import com.example.agenda.ui.data.UserPrefs;
 import com.example.agenda.ui.model.Event;
 import com.example.agenda.ui.utils.Utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -54,6 +57,17 @@ public class ProfileFragment extends Fragment {
     private TextView eventsTextView;
     private Button loadImageButton;
     private Button drawButton;
+
+
+    public ProfileFragment() {
+    }
+
+    public static ProfileFragment newInstance() {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -203,7 +217,8 @@ public class ProfileFragment extends Fragment {
         String avatar = UserPrefs.getInstance().getAvatar();
         if (avatar != null && !avatar.isEmpty() && getActivity() != null) {
             try {
-                Uri imageUri = Uri.parse(avatar);
+                String tt = "file://" + avatar;
+                //Uri imageUri = Uri.parse(tt);
                 if (ContextCompat.checkSelfPermission(getActivity(), WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         && ContextCompat.checkSelfPermission(getActivity(), READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -224,19 +239,12 @@ public class ProfileFragment extends Fragment {
                         // result of the request.
                     }
                 } else {
-
-                    InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                    Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    avatarImage.setImageBitmap(selectedImage);
-                    if ( imageStream != null ) imageStream.close();
+                    File imgFile = new File(tt );
+                    if(imgFile.exists()){
+                         avatarImage.setImageURI(Uri.fromFile(imgFile));
+                    }
                 }
 
-
-//                File imgFile = new  File(avatar);
-//
-//                if(imgFile.exists()){
-//                     avatarImage.setImageURI(Uri.fromFile(imgFile));
-//                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Utils.loadImageFromURLNoPlaceholders("https://publicdomainvectors.org/photos/abstract-user-flat-4.png", avatarImage);

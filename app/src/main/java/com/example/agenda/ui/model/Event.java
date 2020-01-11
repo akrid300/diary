@@ -12,7 +12,7 @@ import com.example.agenda.ui.utils.Utils;
 @Entity(tableName = "Event")
 public class Event {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "event_id")
     private Long id;
 

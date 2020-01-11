@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agenda.R;
 import com.example.agenda.ui.model.HolidayModel;
-import com.example.agenda.ui.utils.Annotations;
 import com.example.agenda.ui.viewholder.HolidayViewHolder;
 
 import java.util.ArrayList;
