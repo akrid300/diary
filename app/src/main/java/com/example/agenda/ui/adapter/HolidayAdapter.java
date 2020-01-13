@@ -33,6 +33,7 @@ public class HolidayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
+    // Layout for the list item
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -44,6 +45,7 @@ public class HolidayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return viewHolder;
     }
 
+    // Configure the view holder with holiday information
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         HolidayViewHolder holidayViewHolder = (HolidayViewHolder) viewHolder;

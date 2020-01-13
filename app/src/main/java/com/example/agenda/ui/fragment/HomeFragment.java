@@ -55,6 +55,7 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         emptyList = root.findViewById(R.id.emptyList);
         eventsList = root.findViewById(R.id.eventsList);
 
+        // Show an empty list in case there are no events
         if (events.size() == 0) {
             emptyList.setVisibility(View.VISIBLE);
             eventsList.setVisibility(View.GONE);
@@ -67,6 +68,7 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Open the EventActivity
                 Intent eventIntent = new Intent(getActivity(), EventActivity.class);
                 startActivityForResult(eventIntent, RESULT_ADD_EVENT);
             }
@@ -75,11 +77,13 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         viewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Open the MapActivity
                 Intent eventIntent = new Intent(getActivity(), MapsActivity.class);
                 startActivity(eventIntent);
             }
         });
 
+        // Get an instance of the database and the event service
         //EventService
         databaseInstance = DatabaseInstance.getInstance(getContext());
         eventDAO = databaseInstance.eventDAO();
@@ -88,15 +92,20 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         eventsList.setLayoutManager(layoutManager);
 
+        // Get the list of events from the database
         ArrayList<Event> events = new ArrayList<>(eventService.getEvents());
 
+        // Create an events adapter to show the list of events
         eventsAdapter = new EventsAdapter(getContext(), this);
         eventsAdapter.setItems(events);
+
+        // Attach the adapter to the recycler view
         eventsList.setAdapter(eventsAdapter);
 
         checkEmptyList();
 
 
+        // Hide the context menu on scroll
         eventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -108,30 +117,38 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         return root;
     }
 
+    // Recycler view listener on click
     @Override
     public void onClick(int position) {
 
     }
 
+
+    // Called when the user clicks on edit on the context menu - for one item in the list
     @Override
     public void onEditClick(int position, Long eventId) {
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra("id", eventId);
+
+        // Closing the Event Activity will call onActivityResult
         startActivityForResult(intent, RESULT_ADD_EVENT);
     }
 
+    // Called when the user clicks on delete on the context menu - for one item in the list
     @Override
     public void onDelete(int position, Long eventId) {
         eventService.deleteEventById(eventId);
         checkEmptyList();
     }
 
+    // Hide the context menu
     @Override
     public void onDestroyView() {
         ContextMenuManager.getInstance(getActivity()).hideContextMenu(true);
         super.onDestroyView();
     }
 
+    // Method to check whether or not there are items in the list
     private void checkEmptyList() {
         if (eventsAdapter.getItemCount() > 0) {
             eventsList.setVisibility(View.VISIBLE);
@@ -143,6 +160,7 @@ public class HomeFragment extends Fragment implements RecyclerViewClickListener 
         }
     }
 
+    // Method called when the Event Activity is closed, after the user edited a filter
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

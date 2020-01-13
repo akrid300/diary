@@ -32,9 +32,13 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.contextMenuListener = this;
     }
 
+
+    // Set the list of items for the adapter
     public void setItems(ArrayList<Event> events) {
         if (items != null) {
             this.items = events;
+
+            // Reload the list - data changed
             notifyDataSetChanged();
         }
     }
@@ -45,7 +49,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return items.size();
     }
 
-
+    // Layout for the list item
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -56,6 +60,7 @@ public class EventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return viewHolder;
     }
 
+    // Configure the view holder with the event data
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         EventViewHolder searchViewHolder = (EventViewHolder) viewHolder;

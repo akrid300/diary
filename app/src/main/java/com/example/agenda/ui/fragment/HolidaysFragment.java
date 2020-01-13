@@ -33,6 +33,8 @@ public class HolidaysFragment extends Fragment {
         TextView emptyView = root.findViewById(R.id.emptyList);
         RecyclerView holidaysList = root.findViewById(R.id.holidaysList);
 
+
+        // Read the holidays from the json file and display them on the screen
         if (getActivity() == null) return root;
         try {
             InputStream is = getActivity().getAssets().open("holidays.json");
@@ -57,9 +59,12 @@ public class HolidaysFragment extends Fragment {
                 holidaysList.setVisibility(View.VISIBLE);
             }
 
+            // Create the adapter for displaying the holidays
             HolidayAdapter holidayAdapter = new HolidayAdapter(getContext(), holidays);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             holidaysList.setLayoutManager(layoutManager);
+
+            // Set the adapter to the recycler view
             holidaysList.setAdapter(holidayAdapter);
 
         } catch (IOException e) {

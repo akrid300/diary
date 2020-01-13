@@ -33,6 +33,8 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
 
         eventTitle.setText(event.getTitle());
 
+
+        // Setup the seekbar to show progress from the added date to the end date
         Calendar startDate = Calendar.getInstance();
         Calendar endDate = Calendar.getInstance();
         Calendar curentDate = Calendar.getInstance();
@@ -60,13 +62,12 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
             progress = currentDaysDiff.intValue();
         }
 
-
+        // Configure the seekbar with the values
         seekBar.setMax(max);
         seekBar.setProgress(progress);
 
 
-
-
+        // Also hide the seekbar is there is no date
         if (!Utils.isStringNullOrEmpty(event.getDate())) {
             eventDate.setText(event.getDate());
             eventDate.setVisibility(View.VISIBLE);
@@ -86,6 +87,7 @@ public class EventViewHolder  extends RecyclerView.ViewHolder {
         }
 
 
+        // Configure the context menu - which will allow the user to either edit or delete an event
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -31,6 +31,7 @@ public class DatePickerDialogFragment extends DialogFragment implements
     }
 
 
+    // Called when the user makes a selection
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();

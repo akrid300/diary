@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+
         setLocations();
 
     }
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private void setLocations() {
 
 
+        // Read the list of locations from the json file and save them to the database
         //LocationService
         DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getApplicationContext());
         LocationDAO locationDAO = databaseInstance.locationDAO();

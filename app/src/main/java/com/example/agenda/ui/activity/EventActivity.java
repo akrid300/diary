@@ -84,6 +84,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         databaseInstance = DatabaseInstance.getInstance(this);
 
+        // Get the list of locations which will be displayed in the spinner
         //LocationService
         locationDAO = databaseInstance.locationDAO();
         locationService = new LocationService(locationDAO);
@@ -92,7 +93,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         eventDAO = databaseInstance.eventDAO();
         eventService = new EventService(eventDAO);
 
+        // Use the date picker to allow the user to select a date
         mDatePickerDialogFragment = new DatePickerDialogFragment(this);
+        // The listener on the date text will tell the app to show the date picker fragment when the user clicks on the text
         dateEditText.setOnClickListener(this);
 
         setLocations();
@@ -104,12 +107,15 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        // If an event id is passed from the Home fragment it means that the user clicks on edit event
+        // Populate the UI with the event details from the database
         if (getIntent() != null && getIntent().getExtras() != null) {
             loadEvent(getIntent().getLongExtra("id", 0));
         }
 
     }
 
+    // For existing event, which is being edited by the user
     private  void loadEvent(Long id) {
         Event event = eventService.getEventById(id);
         if (event == null) return;
@@ -138,6 +144,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    // Save the event to the database when the user clicks on the done button
     private void saveEvent() {
         String title = titleEditText.getText() != null ? titleEditText.getText().toString() : "";
         String description = descriptionEditText.getText() != null ? descriptionEditText.getText().toString() : "";
@@ -186,40 +193,45 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
+        // Setting the result to ok will tell the fragment the activity was successfully finished and the list of events should be refreshed to show the changes
         setResult(RESULT_OK);
         finish();
     }
 
 
+    // Called after the user selects a date
     @Override
     public void onDateClick(Calendar calendar) {
         updateLabel(calendar);
     }
 
+    // Called when the user clicks on the date - show date picker
     @Override
     public void onClick(View v) {
         if (!mDatePickerDialogFragment.isAdded())
             mDatePickerDialogFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-
+    // Update the date text
     private void updateLabel(Calendar calendar) {
         String selectedate = Utils.stringFromDate(calendar);
         dateEditText.setText(selectedate);
     }
 
+    // Setup the spinner with the list of locations
     private void setLocations() {
 
         if (databaseInstance == null || locationDAO == null || locationService == null) return;
 
+        // Get the list of locations from the database
         List<Location> locations = locationService.getLocations();
         for (Location location : locations) {
             String locationNameAndType = getLocationWithType(location);
             spinnerItems.add(locationNameAndType);
             locationsList.put(locationNameAndType, location.getId());
-
         }
 
+        // Create an array for the spinner which will hold the list of locations (name and type)
         spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, spinnerItems) {
             @NonNull
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -237,10 +249,10 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(spinnerAdapter);
 
+        // Set the first location in the list as the default one
         locationSpinner.setSelection(0);
 
     }
-
 
     private String getLocationWithType(Location location) {
         return location.getName() + " - " + location.getType();

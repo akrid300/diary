@@ -22,6 +22,7 @@ public class HolidayViewHolder extends RecyclerView.ViewHolder {
         TextView holidayName = itemView.findViewById(R.id.holidayName);
         TextView holidayDay = itemView.findViewById(R.id.holidayDate);
 
+        // User Picasso for the image
         Utils.loadImageFromURLNoPlaceholders(image, holidayImage);
         holidayName.setText(name);
         holidayDay.setText(date);

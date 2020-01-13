@@ -61,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        //LocationService
+        // Get the list of events and their location to be displayed on the map
         DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getApplicationContext());
 
         EventDAO eventDAO = databaseInstance.eventDAO();
@@ -89,6 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             builder.include(romania);
         }
 
+        // User the bounds to move the camera in a way which includes all the markers added on the map
         LatLngBounds bounds = builder.build();
         int padding = 100; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);

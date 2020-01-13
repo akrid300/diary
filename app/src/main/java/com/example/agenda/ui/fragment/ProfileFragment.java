@@ -72,6 +72,7 @@ public class ProfileFragment extends Fragment {
         loadImageButton = root.findViewById(R.id.buttonLoadImage);
         drawButton = root.findViewById(R.id.buttonnDraw);
 
+        // Get the user information from the Shared Preferences and populate the view, if any
         String name = UserPrefs.getInstance().getUserName();
         String email = UserPrefs.getInstance().getUserEmail();
         Integer age = UserPrefs.getInstance().getUserAge();
@@ -89,11 +90,13 @@ public class ProfileFragment extends Fragment {
             ageEditText.setText(ageString);
         }
 
+        // Load the image using the image path saved in preferences
         loadImage();
 
         drawButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Open the DrawActivity to allow the user to draw a picture
                 Intent intent = new Intent(getActivity(), DrawActivity.class);
                 startActivityForResult(intent, RESULT_DRAW_IMAGE);
             }
@@ -108,6 +111,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Set listeners for the text input fields and save the changes to preferences
         nameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -146,6 +150,7 @@ public class ProfileFragment extends Fragment {
         });
 
 
+        // Get the number of events added from the databse
         DatabaseInstance databaseInstance = DatabaseInstance.getInstance(getContext());
         EventDAO eventDAO = databaseInstance.eventDAO();
         EventService eventService = new EventService(eventDAO);
@@ -161,6 +166,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    // Called after the user either picked an image from gallery or after they finished drawing one
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -172,6 +178,8 @@ public class ProfileFragment extends Fragment {
                 InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 avatarImage.setImageBitmap(selectedImage);
+
+                // Get the real path which should be stored in preferences
                 String r = getRealPathFromURI(getContext(), imageUri);
                 UserPrefs.getInstance().setAvatar(r);
             } catch (FileNotFoundException e) {
@@ -189,6 +197,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    // The application will ask the user to give stoare permissions, and this method is called after they accept or deny permissions
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -203,6 +212,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    // Load the image from the path stored in preferences
     private void loadImage() {
         String avatar = UserPrefs.getInstance().getAvatar();
         if (avatar != null && !avatar.isEmpty() && getActivity() != null) {
@@ -246,6 +256,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    // After the user selects an image from the gallery, get the real path which should be stored in preferences
     private String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
